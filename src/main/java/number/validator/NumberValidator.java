@@ -19,10 +19,11 @@ public class NumberValidator<E> implements Validator {
 
     @Override
     public void checkValidNumbers(File file) throws IOException {
-        //Метод отримує на вхід файл із списком номерів
-        //і записує кожен рядок у колекцію allNumbersArray
-        //Закривамо вчідний файл після виконання циклу
-        //Після цього запускаємо метод saveValidNumbers
+        /*
+        *Метод отримує на вхід файл із списком номерів і записує кожен рядок у колекцію allNumbersArray
+        * Закривамо вчідний файл після виконання циклу
+        * Після цього запускаємо метод saveValidNumbers
+        */
 
         InputStream fileInputStream = new FileInputStream(String.valueOf(file));
         Scanner scanner = new Scanner(fileInputStream);
@@ -36,9 +37,11 @@ public class NumberValidator<E> implements Validator {
     }
 
     public void saveValidNumbers() {
-        //Метод має в собі поле arr - це масив з колекції allNumbersArray
-        //Пробігаємося по масиву і кожен елемент перевіряємо утилітним методом validationChecker,
-        //якщо він повертає true то записуємо елемент в поле класу validNumber
+        /*
+        * Метод має в собі поле arr - це масив з колекції allNumbersArray
+        * Пробігаємося по масиву і кожен елемент перевіряємо утилітним методом validationChecker,
+        * якщо він повертає true то записуємо елемент в поле класу validNumber
+         */
 
         String[] arr = allNumbersArray.toArray(new String[0]);
 
