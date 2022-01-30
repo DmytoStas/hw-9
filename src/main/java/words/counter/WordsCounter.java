@@ -1,9 +1,8 @@
 package words.counter;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,24 +20,26 @@ public class WordsCounter implements Countable {
     // - sortedArr зберігає в собі колекцію - результ виконаної роботи всього класу
     private static ArrayList<String> sortedArr = new ArrayList<>();
 
+
+    /*
+       * Метод wordCounter()
+       * Цей метод приймає файл із словами і за допомогою утилітного методу readInfo() формується масив wordList
+       * Метод має внутрішні поля uniqueWords (для збору унікальних слів) і
+         listOfCountedWords (для збору унікальхих слів + число - кількісь дублікатів цього слова)
+       * Колекція uniqueWords приймає в себе масив всіх слів wordList і зберігає тільки унікальні екземпляри
+       * Поле count потрібне для підрагунку дублікатів
+       * Циклом проходимося по кожному елементу колекції uniqueWords при цьому:
+           - порівнюємо чи  maxWordCount менший за count, якщо так то перезапиши maxWordCount
+           - обнулюємо поле count
+           - вкладеним циклом пробігаємося по масиву всих слів і порівнюємо їх з елементом uniqueWord
+         якщо вониспівпадаються, то count + 1
+           - додаємо елемент(який зараз на перевірці) + count(його кількість дублікатів у реченні)
+         в нову колекцію listOfCountedWords
+       * По завершенню роботи циклу викликаємо метод sort(), який сортує колекцію listOfCountedWords
+         по кількості слів від більшого значення до меншого
+       */
     @Override
-    public void wordCounter(File file) throws IOException {
-        /*
-        * Цей метод приймає файл із словами і за допомогою утилітного методу readInfo() формується масив wordList
-        * Метод має внутрішні поля uniqueWords (для збору унікальних слів) і
-          listOfCountedWords (для збору унікальхих слів + число - кількісь дублікатів цього слова)
-        * Колекція uniqueWords приймає в себе масив всіх слів wordList і зберігає тільки унікальні екземпляри
-        * Поле count потрібне для підрагунку дублікатів
-        * Циклом проходимося по кожному елементу колекції uniqueWords при цьому:
-            - порівнюємо чи  maxWordCount менший за count, якщо так то перезапиши maxWordCount
-            - обнулюємо поле count
-            - вкладеним циклом пробігаємося по масиву всих слів і порівнюємо їх з елементом uniqueWord
-          якщо вониспівпадаються, то count + 1
-            - додаємо елемент(який зараз на перевірці) + count(його кількість дублікатів у реченні)
-          в нову колекцію listOfCountedWords
-        * По завершенню роботи циклу викликаємо метод sort(), який сортує колекцію listOfCountedWords
-          по кількості слів від більшого значення до меншого
-        */
+    public void wordCounter(File file) {
 
         String[] wordList = readInfo(file);
 
@@ -62,38 +63,42 @@ public class WordsCounter implements Countable {
         sort(listOfCountedWords);
     }
 
-    public static String[] readInfo(File file) throws IOException {
-        /*
-        * Цей утилітний метод приймає файл із словами
-        * Читаємо вхідний файл і записуємо кожну строку в joiner
-        * та закриваємо вхідний файл
-        * Метод повертає масив слів
-        */
+
+    /*
+     * Метод readInfo()
+     * Цей утилітний метод приймає файл із словами
+     * Читаємо вхідний файл і записуємо кожну строку в joiner
+     * та закриваємо вхідний файл
+     * Метод повертає масив слів
+     */
+    public static String[] readInfo(File file) {
 
         StringJoiner joiner = new StringJoiner(" ");
 
-        InputStream fileInputStream = new FileInputStream(String.valueOf(file));
-        Scanner scanner = new Scanner(fileInputStream);
-
-        while (scanner.hasNextLine()) {
-            joiner.add(scanner.nextLine());
+        try (FileReader fileReader = new FileReader(String.valueOf(file))) {
+            Scanner scanner = new Scanner(fileReader);
+            while (scanner.hasNextLine()) {
+                joiner.add(scanner.nextLine());
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
-        fileInputStream.close();
-
         return joiner.toString().split("\\s+");
     }
 
-    public static void sort(List<String> countedList) {
-        /*
-        * Метод утилітний приймає колекцію countedList із порахованими словами
-        * В методі є поле wordsArr - строковий масив
-        * З допомогою циклу, який працює як лічильник від значення maxWordCount в сторону зменшення до 1-ці, виконуємо алгоритм:
-            - владеним циклом проходимося по колекції countedList і кожен element сплітиться в wordsArr
-            - якщо значення лічильника дорівнює числу із element(кількість слів), то записуємо його в поле класу sortedArr
-         */
 
+    /*
+     * Метод sort()
+     * Метод утилітний приймає колекцію countedList із порахованими словами
+     * В методі є поле wordsArr - строковий масив
+     * З допомогою циклу, який працює як лічильник від значення maxWordCount в сторону зменшення до 1-ці, виконуємо алгоритм:
+        - владеним циклом проходимося по колекції countedList і кожен element сплітиться в wordsArr
+        - якщо значення лічильника дорівнює числу із element(кількість слів), то записуємо його в поле класу sortedArr
+     */
+    public static void sort(List<String> countedList) {
 
         String[] wordsArr;
+
         for (int p = maxWordCount; p >= 1; p--) {
             for (String element : countedList) {
                 wordsArr = element.split("\\s+");

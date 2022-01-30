@@ -1,11 +1,10 @@
 package json.saver;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class JsonSaverTest {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         FileCreateable newJsonFile = new JsonFileCreator();
 

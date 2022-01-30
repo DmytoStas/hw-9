@@ -1,47 +1,54 @@
 package number.validator;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringJoiner;
 
-public class NumberValidator<E> implements Validator {
+public class NumberValidator implements Validator {
+    //Цей клас має 2 поля:
 
     //Поле allNumbersArray - це колекція яка зберігає всі номери з прочинаого файлу
-    private final List<E> allNumbersArray = new ArrayList<>();
+    private final List<String> allNumbersArray = new ArrayList<>();
 
     //Поле validNumber накопичує тільки валідні номери
     private final StringJoiner validNumber = new StringJoiner("\n");
 
+
+    /*
+     * Метод checkValidNumbers()
+     * Метод отримує на вхід файл із списком номерів і записує кожен рядок у колекцію allNumbersArray
+     * Закривамо вчідний файл після виконання циклу
+     * Після цього запускаємо метод saveValidNumbers
+     */
     @Override
-    public void checkValidNumbers(File file) throws IOException {
-        /*
-        *Метод отримує на вхід файл із списком номерів і записує кожен рядок у колекцію allNumbersArray
-        * Закривамо вчідний файл після виконання циклу
-        * Після цього запускаємо метод saveValidNumbers
-        */
+    public void checkValidNumbers(File file) {
 
-        InputStream fileInputStream = new FileInputStream(String.valueOf(file));
-        Scanner scanner = new Scanner(fileInputStream);
+        try (FileReader fileInputStream = new FileReader(String.valueOf(file))) {
 
-        while (scanner.hasNextLine()) {
-            allNumbersArray.add((E) scanner.nextLine());
+            Scanner scanner = new Scanner(fileInputStream);
+
+            while (scanner.hasNextLine()) {
+                allNumbersArray.add(scanner.nextLine());
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
         }
-        fileInputStream.close();
 
         saveValidNumbers();
     }
 
+
+    /*
+     * Метод saveValidNumbers()
+     * Метод має в собі поле arr - це масив з колекції allNumbersArray
+     * Пробігаємося по масиву і кожен елемент перевіряємо утилітним методом validationChecker,
+     * якщо він повертає true то записуємо елемент в поле класу validNumber
+     */
     public void saveValidNumbers() {
-        /*
-        * Метод має в собі поле arr - це масив з колекції allNumbersArray
-        * Пробігаємося по масиву і кожен елемент перевіряємо утилітним методом validationChecker,
-        * якщо він повертає true то записуємо елемент в поле класу validNumber
-         */
 
         String[] arr = allNumbersArray.toArray(new String[0]);
 
@@ -52,19 +59,20 @@ public class NumberValidator<E> implements Validator {
         }
     }
 
+
+    /*
+     * Метод validationChecker()
+     * Метод отримує на вхід номер і форматує його в масив itemsChar
+     * Якщо виконується умови для цього масиву то повертається true
+     */
     public static boolean validationChecker(String number) {
-        //Метод отримує на вхід номер і форматує його в масив itemsChar
-        //Якщо виконується умови для цього масиву то повертається true
 
         char[] itemsChar;
+
         if ((itemsChar = number.toCharArray()).length == 14) {
-            if ((itemsChar[0] == '(' && itemsChar[4] == ')') && itemsChar[9] == '-') {
-                return true;
-            }
+            return (itemsChar[0] == '(' && itemsChar[4] == ')') && itemsChar[9] == '-';
         } else if ((itemsChar = number.toCharArray()).length == 12) {
-            if (itemsChar[3] == '-' && itemsChar[7] == '-') {
-                return true;
-            }
+            return itemsChar[3] == '-' && itemsChar[7] == '-';
         }
         return false;
     }

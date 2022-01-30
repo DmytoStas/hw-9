@@ -1,12 +1,10 @@
 package number.validator;
 
 import java.io.File;
-import java.io.IOException;
-
 
 public class NumberValidatorTest {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Validator numbers = new NumberValidator();
 
