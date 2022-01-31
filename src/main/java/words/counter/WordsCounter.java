@@ -18,7 +18,7 @@ public class WordsCounter implements Countable {
     private static int maxWordCount;
 
     // - sortedArr зберігає в собі колекцію - результ виконаної роботи всього класу
-    private static ArrayList<String> sortedArr = new ArrayList<>();
+    private static ArrayList<String> sortedList = new ArrayList<>();
 
 
     /*
@@ -76,10 +76,13 @@ public class WordsCounter implements Countable {
         StringJoiner joiner = new StringJoiner(" ");
 
         try (FileReader fileReader = new FileReader(String.valueOf(file))) {
+
             Scanner scanner = new Scanner(fileReader);
+
             while (scanner.hasNextLine()) {
                 joiner.add(scanner.nextLine());
             }
+            scanner.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -103,7 +106,7 @@ public class WordsCounter implements Countable {
             for (String element : countedList) {
                 wordsArr = element.split("\\s+");
                 if (p == Integer.parseInt(wordsArr[1])) {
-                    sortedArr.add(element);
+                    sortedList.add(element);
                 }
             }
         }
@@ -112,7 +115,7 @@ public class WordsCounter implements Countable {
     @Override
     public void printResult() {
         //Метод виводить в консоль кожен елемент поля класу sortedArr в новий рядок
-        for (Object element : sortedArr) {
+        for (Object element : sortedList) {
             System.out.println(element);
         }
     }

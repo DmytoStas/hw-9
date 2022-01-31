@@ -12,7 +12,7 @@ public class NumberValidator implements Validator {
     //Цей клас має 2 поля:
 
     //Поле allNumbersArray - це колекція яка зберігає всі номери з прочинаого файлу
-    private final List<String> allNumbersArray = new ArrayList<>();
+    private final List<String> allNumbersList = new ArrayList<>();
 
     //Поле validNumber накопичує тільки валідні номери
     private final StringJoiner validNumber = new StringJoiner("\n");
@@ -32,8 +32,9 @@ public class NumberValidator implements Validator {
             Scanner scanner = new Scanner(fileInputStream);
 
             while (scanner.hasNextLine()) {
-                allNumbersArray.add(scanner.nextLine());
+                allNumbersList.add(scanner.nextLine());
             }
+            scanner.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
@@ -50,7 +51,7 @@ public class NumberValidator implements Validator {
      */
     public void saveValidNumbers() {
 
-        String[] arr = allNumbersArray.toArray(new String[0]);
+        String[] arr = allNumbersList.toArray(new String[0]);
 
         for (String element : arr) {
             if (validationChecker(element)) {

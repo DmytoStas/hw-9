@@ -31,6 +31,7 @@ public class JsonFileCreator implements FileCreateable {
             while (scanner.hasNextLine()) {
                 elements.add(scanner.nextLine());
             }
+            scanner.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
